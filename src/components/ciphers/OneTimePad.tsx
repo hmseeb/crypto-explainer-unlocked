@@ -81,7 +81,8 @@ const OneTimePad: React.FC = () => {
       setError('');
       const encrypted = otpEncrypt(plaintext, key);
       setCiphertext(encrypted);
-      setDecryptedText(otpDecrypt(encrypted, key));
+      // Clear decrypted text when encrypting
+      setDecryptedText('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Encryption failed');
     }

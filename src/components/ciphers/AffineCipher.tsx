@@ -84,7 +84,8 @@ const AffineCipher: React.FC = () => {
     setError('');
     const encrypted = affineEncrypt(plaintext, a, b);
     setCiphertext(encrypted);
-    setDecryptedText(affineDecrypt(encrypted, a, b));
+    // Clear decrypted text when encrypting
+    setDecryptedText('');
   };
 
   const handleDecrypt = () => {

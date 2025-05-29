@@ -41,7 +41,8 @@ const CaesarCipher: React.FC = () => {
     setError('');
     const encrypted = caesarEncrypt(plaintext, shift);
     setCiphertext(encrypted);
-    setDecryptedText(caesarDecrypt(encrypted, shift));
+    // Clear decrypted text when encrypting
+    setDecryptedText('');
   };
 
   const handleDecrypt = () => {

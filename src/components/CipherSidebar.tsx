@@ -107,17 +107,17 @@ const CipherSidebar: React.FC<CipherSidebarProps> = ({ selectedCipher, onCipherS
             <Button
               key={cipher.id}
               variant={selectedCipher === cipher.id ? "default" : "ghost"}
-              className="w-full justify-start h-auto p-3"
+              className="w-full justify-start h-auto p-3 text-left"
               onClick={() => onCipherSelect(cipher.id)}
             >
-              <div className="flex items-start space-x-3 w-full">
+              <div className="flex items-start space-x-3 w-full min-w-0">
                 <IconComponent className="w-5 h-5 mt-0.5 flex-shrink-0" />
-                <div className="text-left flex-1 min-w-0">
-                  <div className="font-medium truncate">{cipher.name}</div>
-                  <div className="text-xs text-muted-foreground mt-1">
+                <div className="flex-1 min-w-0 overflow-hidden">
+                  <div className="font-medium text-sm leading-tight mb-1">{cipher.name}</div>
+                  <div className="text-xs text-muted-foreground leading-tight mb-2 break-words">
                     {cipher.description}
                   </div>
-                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium mt-2 ${getDifficultyColor(cipher.difficulty)}`}>
+                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(cipher.difficulty)}`}>
                     {cipher.difficulty}
                   </span>
                 </div>
