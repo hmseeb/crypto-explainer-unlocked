@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -154,7 +153,8 @@ const PlayfairCipher: React.FC = () => {
     setError('');
     const encrypted = playfairEncrypt(plaintext, keyword);
     setCiphertext(encrypted);
-    setDecryptedText(playfairDecrypt(encrypted, keyword));
+    // Clear decrypted text when encrypting
+    setDecryptedText('');
   };
 
   const handleDecrypt = () => {

@@ -19,7 +19,6 @@ const VigenereCipher: React.FC = () => {
   const vigenereEncrypt = (text: string, key: string): string => {
     if (!key) return text;
     
-    const cleanText = text.toUpperCase().replace(/[^A-Z]/g, '');
     const cleanKey = key.toUpperCase().replace(/[^A-Z]/g, '');
     let result = '';
     let keyIndex = 0;
@@ -90,7 +89,8 @@ const VigenereCipher: React.FC = () => {
     setError('');
     const encrypted = vigenereEncrypt(plaintext, keyword);
     setCiphertext(encrypted);
-    setDecryptedText(vigenereDecrypt(encrypted, keyword));
+    // Clear decrypted text when encrypting
+    setDecryptedText('');
   };
 
   const handleDecrypt = () => {

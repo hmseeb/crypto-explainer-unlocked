@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -123,7 +122,8 @@ const RSACipher: React.FC = () => {
       setError('');
       const encrypted = rsaEncrypt(plaintext, publicKey);
       setCiphertext(encrypted);
-      setDecryptedText(rsaDecrypt(encrypted, privateKey));
+      // Clear decrypted text when encrypting
+      setDecryptedText('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Encryption failed');
     }

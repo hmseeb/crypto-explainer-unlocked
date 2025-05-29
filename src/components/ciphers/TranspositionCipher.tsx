@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -106,7 +105,8 @@ const TranspositionCipher: React.FC = () => {
     setError('');
     const encrypted = transpositionEncrypt(plaintext, keyword);
     setCiphertext(encrypted);
-    setDecryptedText(transpositionDecrypt(encrypted, keyword));
+    // Clear decrypted text when encrypting
+    setDecryptedText('');
   };
 
   const handleDecrypt = () => {
