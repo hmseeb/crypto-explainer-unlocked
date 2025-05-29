@@ -23,7 +23,8 @@ const TranspositionCipher: React.FC = () => {
   };
 
   const transpositionEncrypt = (text: string, keyword: string): string => {
-    const cleanText = text.replace(/[^A-Z]/gi, '').toUpperCase();
+    // Remove only spaces but preserve case and other characters
+    const cleanText = text.replace(/\s+/g, '');
     const keyLength = keyword.length;
     const columnOrder = generateColumnOrder(keyword);
     
@@ -78,7 +79,7 @@ const TranspositionCipher: React.FC = () => {
   };
 
   const createVisualization = (text: string, keyword: string): { grid: string[][], columnOrder: number[] } => {
-    const cleanText = text.replace(/[^A-Z]/gi, '').toUpperCase();
+    const cleanText = text.replace(/\s+/g, '');
     const keyLength = keyword.length;
     const columnOrder = generateColumnOrder(keyword);
     

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -25,44 +24,72 @@ const OneTimePad: React.FC = () => {
   };
 
   const otpEncrypt = (text: string, key: string): string => {
-    const cleanText = text.toUpperCase().replace(/[^A-Z]/g, '');
     const cleanKey = key.toUpperCase().replace(/[^A-Z]/g, '');
-    
-    if (cleanText.length > cleanKey.length) {
-      throw new Error('Key must be at least as long as the message');
-    }
-    
     let result = '';
-    for (let i = 0; i < cleanText.length; i++) {
-      const textChar = cleanText.charCodeAt(i) - 65;
-      const keyChar = cleanKey.charCodeAt(i) - 65;
-      const encrypted = (textChar + keyChar) % 26;
-      result += String.fromCharCode(encrypted + 65);
+    let keyIndex = 0;
+    
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      
+      if (char >= 'A' && char <= 'Z') {
+        if (keyIndex >= cleanKey.length) {
+          throw new Error('Key must be at least as long as the message (letters only)');
+        }
+        const textChar = char.charCodeAt(0) - 65;
+        const keyChar = cleanKey.charCodeAt(keyIndex) - 65;
+        const encrypted = (textChar + keyChar) % 26;
+        result += String.fromCharCode(encrypted + 65);
+        keyIndex++;
+      } else if (char >= 'a' && char <= 'z') {
+        if (keyIndex >= cleanKey.length) {
+          throw new Error('Key must be at least as long as the message (letters only)');
+        }
+        const textChar = char.charCodeAt(0) - 97;
+        const keyChar = cleanKey.charCodeAt(keyIndex) - 65;
+        const encrypted = (textChar + keyChar) % 26;
+        result += String.fromCharCode(encrypted + 97);
+        keyIndex++;
+      } else {
+        result += char; // Keep spaces, punctuation, and numbers unchanged
+      }
     }
     return result;
   };
 
   const otpDecrypt = (text: string, key: string): string => {
-    const cleanText = text.toUpperCase().replace(/[^A-Z]/g, '');
     const cleanKey = key.toUpperCase().replace(/[^A-Z]/g, '');
-    
     let result = '';
-    for (let i = 0; i < cleanText.length; i++) {
-      const cipherChar = cleanText.charCodeAt(i) - 65;
-      const keyChar = cleanKey.charCodeAt(i) - 65;
-      const decrypted = (cipherChar - keyChar + 26) % 26;
-      result += String.fromCharCode(decrypted + 65);
+    let keyIndex = 0;
+    
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      
+      if (char >= 'A' && char <= 'Z') {
+        const cipherChar = char.charCodeAt(0) - 65;
+        const keyChar = cleanKey.charCodeAt(keyIndex) - 65;
+        const decrypted = (cipherChar - keyChar + 26) % 26;
+        result += String.fromCharCode(decrypted + 65);
+        keyIndex++;
+      } else if (char >= 'a' && char <= 'z') {
+        const cipherChar = char.charCodeAt(0) - 97;
+        const keyChar = cleanKey.charCodeAt(keyIndex) - 65;
+        const decrypted = (cipherChar - keyChar + 26) % 26;
+        result += String.fromCharCode(decrypted + 97);
+        keyIndex++;
+      } else {
+        result += char; // Keep spaces, punctuation, and numbers unchanged
+      }
     }
     return result;
   };
 
   const handleGenerateKey = () => {
-    const cleanText = plaintext.replace(/[^A-Z]/gi, '');
-    if (!cleanText) {
+    const letterCount = plaintext.replace(/[^A-Za-z]/g, '').length;
+    if (!letterCount) {
       setError('Please enter some text first to generate an appropriate key length');
       return;
     }
-    const newKey = generateRandomKey(cleanText.length);
+    const newKey = generateRandomKey(letterCount);
     setKey(newKey);
     setError('');
   };
@@ -102,7 +129,7 @@ const OneTimePad: React.FC = () => {
     setDecryptedText(decrypted);
   };
 
-  const cleanPlaintext = plaintext.replace(/[^A-Z]/gi, '');
+  const cleanPlaintext = plaintext.replace(/[^A-Za-z]/g, '');
   const cleanKey = key.replace(/[^A-Z]/gi, '');
   const keyLength = cleanKey.length;
   const messageLength = cleanPlaintext.length;

@@ -61,7 +61,8 @@ const PlayfairCipher: React.FC = () => {
   };
 
   const preparePlaintext = (text: string): string => {
-    let prepared = text.toUpperCase().replace(/[^A-Z]/g, '').replace(/J/g, 'I');
+    // Remove spaces and preserve case, convert J to I
+    let prepared = text.replace(/\s+/g, '').replace(/[Jj]/g, match => match === 'J' ? 'I' : 'i');
     let result = '';
     
     for (let i = 0; i < prepared.length; i += 2) {
@@ -69,9 +70,9 @@ const PlayfairCipher: React.FC = () => {
       let second = prepared[i + 1];
       
       if (!second) {
-        second = 'X'; // Padding
-      } else if (first === second) {
-        result += first + 'X';
+        second = first.toLowerCase() === first ? 'x' : 'X'; // Padding with matching case
+      } else if (first.toUpperCase() === second.toUpperCase()) {
+        result += first + (first.toLowerCase() === first ? 'x' : 'X');
         i--; // Process the second character again
         continue;
       }
@@ -91,22 +92,28 @@ const PlayfairCipher: React.FC = () => {
       const char1 = prepared[i];
       const char2 = prepared[i + 1];
       
-      const [row1, col1] = findPosition(char1, keySquare);
-      const [row2, col2] = findPosition(char2, keySquare);
+      const [row1, col1] = findPosition(char1.toUpperCase().replace(/J/g, 'I'), keySquare);
+      const [row2, col2] = findPosition(char2.toUpperCase().replace(/J/g, 'I'), keySquare);
+      
+      let encrypted1, encrypted2;
       
       if (row1 === row2) {
         // Same row - shift right
-        result += keySquare[row1][(col1 + 1) % 5];
-        result += keySquare[row2][(col2 + 1) % 5];
+        encrypted1 = keySquare[row1][(col1 + 1) % 5];
+        encrypted2 = keySquare[row2][(col2 + 1) % 5];
       } else if (col1 === col2) {
         // Same column - shift down
-        result += keySquare[(row1 + 1) % 5][col1];
-        result += keySquare[(row2 + 1) % 5][col2];
+        encrypted1 = keySquare[(row1 + 1) % 5][col1];
+        encrypted2 = keySquare[(row2 + 1) % 5][col2];
       } else {
         // Rectangle - swap columns
-        result += keySquare[row1][col2];
-        result += keySquare[row2][col1];
+        encrypted1 = keySquare[row1][col2];
+        encrypted2 = keySquare[row2][col1];
       }
+      
+      // Preserve original case
+      result += char1.toLowerCase() === char1 ? encrypted1.toLowerCase() : encrypted1;
+      result += char2.toLowerCase() === char2 ? encrypted2.toLowerCase() : encrypted2;
     }
     
     return result;
@@ -120,22 +127,28 @@ const PlayfairCipher: React.FC = () => {
       const char1 = text[i];
       const char2 = text[i + 1];
       
-      const [row1, col1] = findPosition(char1, keySquare);
-      const [row2, col2] = findPosition(char2, keySquare);
+      const [row1, col1] = findPosition(char1.toUpperCase().replace(/J/g, 'I'), keySquare);
+      const [row2, col2] = findPosition(char2.toUpperCase().replace(/J/g, 'I'), keySquare);
+      
+      let decrypted1, decrypted2;
       
       if (row1 === row2) {
         // Same row - shift left
-        result += keySquare[row1][(col1 + 4) % 5];
-        result += keySquare[row2][(col2 + 4) % 5];
+        decrypted1 = keySquare[row1][(col1 + 4) % 5];
+        decrypted2 = keySquare[row2][(col2 + 4) % 5];
       } else if (col1 === col2) {
         // Same column - shift up
-        result += keySquare[(row1 + 4) % 5][col1];
-        result += keySquare[(row2 + 4) % 5][col2];
+        decrypted1 = keySquare[(row1 + 4) % 5][col1];
+        decrypted2 = keySquare[(row2 + 4) % 5][col2];
       } else {
         // Rectangle - swap columns
-        result += keySquare[row1][col2];
-        result += keySquare[row2][col1];
+        decrypted1 = keySquare[row1][col2];
+        decrypted2 = keySquare[row2][col1];
       }
+      
+      // Preserve original case
+      result += char1.toLowerCase() === char1 ? decrypted1.toLowerCase() : decrypted1;
+      result += char2.toLowerCase() === char2 ? decrypted2.toLowerCase() : decrypted2;
     }
     
     return result;

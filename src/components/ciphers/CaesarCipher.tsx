@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -18,13 +17,14 @@ const CaesarCipher: React.FC = () => {
 
   const caesarEncrypt = (text: string, shift: number): string => {
     return text
-      .toUpperCase()
       .split('')
       .map(char => {
         if (char >= 'A' && char <= 'Z') {
           return String.fromCharCode(((char.charCodeAt(0) - 65 + shift) % 26) + 65);
+        } else if (char >= 'a' && char <= 'z') {
+          return String.fromCharCode(((char.charCodeAt(0) - 97 + shift) % 26) + 97);
         }
-        return char;
+        return char; // Keep spaces, punctuation, and numbers unchanged
       })
       .join('');
   };

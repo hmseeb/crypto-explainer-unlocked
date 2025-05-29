@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -37,15 +36,18 @@ const AffineCipher: React.FC = () => {
 
   const affineEncrypt = (text: string, a: number, b: number): string => {
     return text
-      .toUpperCase()
       .split('')
       .map(char => {
         if (char >= 'A' && char <= 'Z') {
           const x = char.charCodeAt(0) - 65;
           const encrypted = (a * x + b) % 26;
           return String.fromCharCode(encrypted + 65);
+        } else if (char >= 'a' && char <= 'z') {
+          const x = char.charCodeAt(0) - 97;
+          const encrypted = (a * x + b) % 26;
+          return String.fromCharCode(encrypted + 97);
         }
-        return char;
+        return char; // Keep spaces, punctuation, and numbers unchanged
       })
       .join('');
   };
@@ -55,15 +57,18 @@ const AffineCipher: React.FC = () => {
     if (aInverse === -1) return 'Invalid key';
     
     return text
-      .toUpperCase()
       .split('')
       .map(char => {
         if (char >= 'A' && char <= 'Z') {
           const y = char.charCodeAt(0) - 65;
           const decrypted = (aInverse * (y - b + 26)) % 26;
           return String.fromCharCode(decrypted + 65);
+        } else if (char >= 'a' && char <= 'z') {
+          const y = char.charCodeAt(0) - 97;
+          const decrypted = (aInverse * (y - b + 26)) % 26;
+          return String.fromCharCode(decrypted + 97);
         }
-        return char;
+        return char; // Keep spaces, punctuation, and numbers unchanged
       })
       .join('');
   };

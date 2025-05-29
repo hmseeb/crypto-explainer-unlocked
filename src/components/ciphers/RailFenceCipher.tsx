@@ -18,13 +18,14 @@ const RailFenceCipher: React.FC = () => {
   const railFenceEncrypt = (text: string, numRails: number): string => {
     if (numRails <= 1) return text;
     
-    const cleanText = text.replace(/[^A-Z]/gi, '').toUpperCase();
+    // Only remove spaces for processing, preserve case and other characters
+    const processedText = text.replace(/\s+/g, '');
     const fence: string[][] = Array(numRails).fill(null).map(() => []);
     
     let rail = 0;
     let direction = 1;
     
-    for (const char of cleanText) {
+    for (const char of processedText) {
       fence[rail].push(char);
       
       rail += direction;
@@ -39,7 +40,6 @@ const RailFenceCipher: React.FC = () => {
   const railFenceDecrypt = (text: string, numRails: number): string => {
     if (numRails <= 1) return text;
     
-    const cleanText = text.replace(/[^A-Z]/gi, '').toUpperCase();
     const fence: string[][] = Array(numRails).fill(null).map(() => []);
     
     // Calculate positions for each rail
@@ -47,7 +47,7 @@ const RailFenceCipher: React.FC = () => {
     let rail = 0;
     let direction = 1;
     
-    for (let i = 0; i < cleanText.length; i++) {
+    for (let i = 0; i < text.length; i++) {
       railLengths[rail]++;
       rail += direction;
       if (rail === numRails - 1 || rail === 0) {
@@ -59,7 +59,7 @@ const RailFenceCipher: React.FC = () => {
     let textIndex = 0;
     for (let i = 0; i < numRails; i++) {
       for (let j = 0; j < railLengths[i]; j++) {
-        fence[i].push(cleanText[textIndex++]);
+        fence[i].push(text[textIndex++]);
       }
     }
     
@@ -69,7 +69,7 @@ const RailFenceCipher: React.FC = () => {
     direction = 1;
     const railIndices = Array(numRails).fill(0);
     
-    for (let i = 0; i < cleanText.length; i++) {
+    for (let i = 0; i < text.length; i++) {
       result += fence[rail][railIndices[rail]++];
       rail += direction;
       if (rail === numRails - 1 || rail === 0) {
@@ -83,14 +83,14 @@ const RailFenceCipher: React.FC = () => {
   const createRailVisualization = (text: string, numRails: number): string[][] => {
     if (numRails <= 1 || !text) return [];
     
-    const cleanText = text.replace(/[^A-Z]/gi, '').toUpperCase();
-    const visualization: string[][] = Array(numRails).fill(null).map(() => Array(cleanText.length).fill(' '));
+    const processedText = text.replace(/\s+/g, '');
+    const visualization: string[][] = Array(numRails).fill(null).map(() => Array(processedText.length).fill(' '));
     
     let rail = 0;
     let direction = 1;
     
-    for (let i = 0; i < cleanText.length; i++) {
-      visualization[rail][i] = cleanText[i];
+    for (let i = 0; i < processedText.length; i++) {
+      visualization[rail][i] = processedText[i];
       
       rail += direction;
       if (rail === numRails - 1 || rail === 0) {

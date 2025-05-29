@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -24,14 +23,19 @@ const VigenereCipher: React.FC = () => {
     let keyIndex = 0;
 
     for (let i = 0; i < text.length; i++) {
-      const char = text[i].toUpperCase();
+      const char = text[i];
       if (char >= 'A' && char <= 'Z') {
         const shift = cleanKey.charCodeAt(keyIndex % cleanKey.length) - 65;
         const encrypted = String.fromCharCode(((char.charCodeAt(0) - 65 + shift) % 26) + 65);
         result += encrypted;
         keyIndex++;
+      } else if (char >= 'a' && char <= 'z') {
+        const shift = cleanKey.charCodeAt(keyIndex % cleanKey.length) - 65;
+        const encrypted = String.fromCharCode(((char.charCodeAt(0) - 97 + shift) % 26) + 97);
+        result += encrypted;
+        keyIndex++;
       } else {
-        result += text[i];
+        result += char; // Keep spaces, punctuation, and numbers unchanged
       }
     }
     return result;
@@ -45,14 +49,19 @@ const VigenereCipher: React.FC = () => {
     let keyIndex = 0;
 
     for (let i = 0; i < text.length; i++) {
-      const char = text[i].toUpperCase();
+      const char = text[i];
       if (char >= 'A' && char <= 'Z') {
         const shift = cleanKey.charCodeAt(keyIndex % cleanKey.length) - 65;
         const decrypted = String.fromCharCode(((char.charCodeAt(0) - 65 - shift + 26) % 26) + 65);
         result += decrypted;
         keyIndex++;
+      } else if (char >= 'a' && char <= 'z') {
+        const shift = cleanKey.charCodeAt(keyIndex % cleanKey.length) - 65;
+        const decrypted = String.fromCharCode(((char.charCodeAt(0) - 97 - shift + 26) % 26) + 97);
+        result += decrypted;
+        keyIndex++;
       } else {
-        result += text[i];
+        result += char; // Keep spaces, punctuation, and numbers unchanged
       }
     }
     return result;
@@ -66,8 +75,8 @@ const VigenereCipher: React.FC = () => {
     let keyIndex = 0;
 
     for (let i = 0; i < text.length; i++) {
-      const char = text[i].toUpperCase();
-      if (char >= 'A' && char <= 'Z') {
+      const char = text[i];
+      if ((char >= 'A' && char <= 'Z') || (char >= 'a' && char <= 'z')) {
         pattern += cleanKey[keyIndex % cleanKey.length];
         keyIndex++;
       } else {
@@ -153,7 +162,7 @@ const VigenereCipher: React.FC = () => {
                 <div>
                   <Label>Key Pattern</Label>
                   <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-900 rounded text-sm font-mono">
-                    <div>Text: {plaintext.toUpperCase()}</div>
+                    <div>Text: {plaintext}</div>
                     <div>Key:  {generateKeyPattern(plaintext, keyword)}</div>
                   </div>
                 </div>
